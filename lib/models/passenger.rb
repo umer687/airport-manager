@@ -51,5 +51,18 @@ module Models
         @total_baggage_weight.to_f
       end
     end
+
+    # ✅ Add these helper methods ↓↓↓
+    def add_bag(bag)
+      @bags ||= []
+      @bags << bag
+      @total_baggage_weight = total_baggage_weight
+    end
+
+    def remove_bag(bag_id)
+      @bags.reject! { |b| b.respond_to?(:id) && b.id == bag_id }
+      # Calculate total from bags array directly to handle empty case correctly
+      @total_baggage_weight = @bags.map { |b| (b.respond_to?(:weight) ? b.weight.to_f : 0.0) }.sum
+    end
   end
 end
