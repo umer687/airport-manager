@@ -7,12 +7,13 @@ require 'models/aircraft'
 class TestBaggage < Minitest::Test
   def setup
     @p = Models::Passenger.new(name: "Ali", email: "ali@example.com")
-    @p.bags = [Models::Bag.new(id: "B1", weight: 20)]
+    bag1 = Models::Bag.new(weight: 20)
+    @p.bags = [bag1]
   end
 
   def test_total_weight
     assert_equal 20, @p.total_baggage_weight
-    @p.bags << Models::Bag.new(id: "B2", weight: 5)
+    @p.bags << Models::Bag.new(weight: 5)
     assert_equal 25, @p.total_baggage_weight
   end
 
