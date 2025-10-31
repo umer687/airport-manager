@@ -6,8 +6,8 @@ module Models
     attr_accessor :id, :weight
     attr_reader :errors
 
-    def initialize(weight:)
-      @id = SecureRandom.uuid
+    def initialize(weight:, id: nil)
+      @id = id || SecureRandom.uuid
       @weight = weight.to_f
       @errors = []
     end
