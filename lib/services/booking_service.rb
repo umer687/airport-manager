@@ -18,6 +18,15 @@ module Services
       booked = @store.tickets.count { |t| booking_for(t)&.flight_number == flight.number }
       return nil if cap && booked >= cap
 
+      # ✅ NEW: baggage weight validation
+      aircraft = @store.aircraft.find { |a| a.tail_number == flight.aircraft_tail }
+      if aircraft && aircraft.respond_to?(:max_baggage_weight) && passenger.respond_to?(:total_baggage_weight)
+        if passenger.total_baggage_weight > aircraft.max_baggage_weight
+          raise "Baggage limit exceeded for #{passenger.email}"
+        end
+      end
+
+      # booking creation
       b = Models::Booking.new(id: SecureRandom.uuid, flight_number: flight.number, passenger_email: passenger.email)
       @store.add_booking(b)
       seat = "#{('A'..'F').to_a.sample}#{rand(1..30)}"
